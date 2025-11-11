@@ -1,22 +1,51 @@
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-    <meta charset="utf-8">
-    <title>Текст из файла</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Апельсиновая История</title>
+  <style>
+    body {
+      background: #fffaf0; /* нежно-апельсиновый крем */
+      color: #2c1810;
+      font-family: 'Segoe UI', 'Times New Roman', serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      white-space: pre-wrap; /* сохраняет пробелы и переносы */
+    }
+    #content {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    h1 {
+      text-align: center;
+      color: #ff6f00;
+      font-size: 2.2em;
+      margin-top: 0;
+    }
+  </style>
 </head>
 <body>
-    <div id="content"></div>
-    <script>
-    fetch('Апельсиновая История.txt')
-    .then(response => response.text())
-    .then(text => {
-        const paragraphs = text.split('\n\n');
-        const contentElement = document.getElementById('content');
-        paragraphs.forEach(paragraph => {
-            const p = document.createElement('p');
-            p.textContent = paragraph;
-            contentElement.appendChild(p);
-        });
-    });
-    </script>
+  <div id="content">
+    <h1>Апельсиновая История</h1>
+    <div id="text"></div>
+  </div>
+
+  <script>
+    fetch('apelsin.txt')
+      .then(response => response.text())
+      .then(text => {
+        document.getElementById('text').textContent = text;
+      })
+      .catch(err => {
+        document.getElementById('text').innerHTML = '<p style="color:red">Ошибка: не удалось загрузить Апельсиновую Историю. Убедитесь, что файл <code>apelsin.txt</code> находится в корне репозитория.</p>';
+        console.error(err);
+      });
+  </script>
 </body>
 </html>
