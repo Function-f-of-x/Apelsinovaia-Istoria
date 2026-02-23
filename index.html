@@ -28,22 +28,51 @@
       font-size: 2.2em;
       margin-top: 0;
     }
+    .loading {
+      text-align: center;
+      color: #ff6f00;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
   <div id="content">
     <h1>Апельсиновая История</h1>
-    <div id="text"></div>
+    <div id="text" class="loading">Загрузка истории...</div>
   </div>
 
   <script>
-    fetch('apelsin.txt')
-      .then(response => response.text())
-      .then(text => {
-        document.getElementById('text').textContent = text;
+    // Массив файлов для загрузки (в порядке отображения)
+    const files = ['part 1.md', 'part 2.md'];
+    
+    // Функция для загрузки одного файла
+    function loadFile(filename) {
+      return fetch(filename)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Файл ${filename} не найден`);
+          }
+          return response.text();
+        });
+    }
+    
+    // Загружаем все файлы последовательно и объединяем
+    Promise.all(files.map(loadFile))
+      .then(contents => {
+        // Объединяем содержимое всех файлов в один текст
+        const fullText = contents.join('\n');
+        document.getElementById('text').textContent = fullText;
+        document.getElementById('text').classList.remove('loading');
       })
       .catch(err => {
-        document.getElementById('text').innerHTML = '<p style="color:red">Ошибка: не удалось загрузить Апельсиновую Историю. Убедитесь, что файл <code>apelsin.txt</code> находится в корне репозитория.</p>';
+        document.getElementById('text').innerHTML = `
+          <p style="color:red">
+            <strong>Ошибка:</strong> не удалось загрузить Апельсиновую Историю.<br><br>
+            Убедитесь, что файлы <code>part 1.md</code> и <code>part 2.md</code> 
+            находятся в корне репозитория.<br><br>
+            <em>Детали: ${err.message}</em>
+          </p>
+        `;
         console.error(err);
       });
   </script>
